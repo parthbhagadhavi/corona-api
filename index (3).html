@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+</head>
+
+<body>
+
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body{
+            background-color: #ccc;
+        }
+
+        .body{
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .body input{
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            padding-left: 20px;
+            padding-left: 30px;
+            
+        }
+
+        .body button{
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            cursor: pointer;
+            transition: 0.5s;
+            padding: 10px;
+        }
+
+        .body button:hover{
+            background-color: gray;
+            color: white;
+        }
+
+        .body input,
+        button{
+            height: 50px;
+            margin: 5px;
+            /* padding: 10px; */
+            border: none;
+            outline: none;
+            font-size: 1.2rem;
+
+        }
+
+        .container{
+            /* border: 1px solid white; */
+            margin-top: 20px;
+            padding: 20px;
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+
+        }
+
+        .card{
+            background-color: white;
+            padding: 20px;
+            width: 500px;
+            border-radius: 10px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            /* font-weight: 600; */
+        }
+
+        .card p{
+            margin: 10px;
+            font-size: 1.3rem;
+        }
+
+       
+    </style>
+<div class="body">
+    <input type="text" id="input">
+    <button id="search-btn">search</button>
+</div>
+    
+<div class="container"></div>
+
+
+    <script>
+
+        // let url = "https://api.rootnet.in/covid19-in/stats/latest";
+
+        async function get() {
+            try {
+
+                let url = await fetch('https://api.rootnet.in/covid19-in/stats/latest')
+                let result = await url.json();
+                
+                
+                let input = document.getElementById('input');
+                let btn = document.getElementById('search-btn');
+                let contaienr = document.querySelector('.container')
+
+                btn.addEventListener('click', () => {
+                    // para.textContent = input.value;
+                    // console.log(input.value)
+
+                    result.data.regional.forEach(val => {
+                        
+                        if (val.loc == input.value) {
+                            // console.log(true)
+                            console.log(val)
+                            console.log(val.totalConfirmed)
+                            
+                            let div = document.createElement('div');
+                            div.classList.add('card');
+
+                            let p0 = document.createElement('p');
+                            p0.textContent = `location : ${val.loc}`;
+
+                            let p1 = document.createElement('p');
+                            p1.textContent = `confirmedIndian cases : ${val.confirmedCasesIndian}`
+
+                            let p2 = document.createElement('p');
+                            p2.textContent = `deaths : ${val.deaths}`;
+
+                            let p3 = document.createElement('p');
+                            p3.textContent = `discharged : ${val.discharged}`
+
+                            let p4 = document.createElement('p');
+                            p4.textContent = `confirmedCasesForeign : ${val.confirmedCasesForeign}`
+
+                            let p5 = document.createElement('p');
+                            p5.textContent = `total confirmed cases : ${val.totalConfirmed}`
+
+                            div.appendChild(p0)
+                            div.appendChild(p1)
+                            div.appendChild(p2)
+                            div.appendChild(p3)
+                            div.appendChild(p4)
+                            div.appendChild(p5)
+
+                            contaienr.appendChild(div)
+                        }
+                    })
+
+
+                })
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
+
+        get()
+    </script>
+</body>
+
+</html>
